@@ -5,21 +5,11 @@
  */
 package com.t3h.ecommerce.servlet;
 
-import com.t3h.ecommerce.entity.Category;
-import com.t3h.ecommerce.entity.Product;
-import com.t3h.ecommerce.service.DatabaseConnection;
-import com.t3h.ecommerce.service.ProductService;
+import com.t3h.ecommerce.entity.Cart;
+import com.t3h.ecommerce.entity.CartProduct;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Collection;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author BINH
  */
-public class ProductServlet extends HttpServlet {
+public class CartServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,15 +31,20 @@ public class ProductServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException, SQLException {
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-        int onPageProducts = 10;
-        List<Product> listProducts = new ArrayList<>();
-        listProducts = ProductService.GetProducts("select * from ecom_product order by maker_date limit "+ onPageProducts);
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");        
+        request.setCharacterEncoding("UTF-8");        
+        Cart cart = null;
+        if(request.getSession().getAttribute("cart") != null){
+            cart = (Cart)request.getSession().getAttribute("cart");
+        }else{
+            cart = new Cart();
+        }
+        Collection<CartProduct> listProducts;
+        listProducts =(Collection<CartProduct>)cart.getListProduct().values();
+        
         request.setAttribute("listProducts", listProducts);
-        request.getRequestDispatcher("index.jsp").forward(request, response);
+        request.getRequestDispatcher("cart.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -64,13 +59,7 @@ public class ProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -84,13 +73,7 @@ public class ProductServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**

@@ -5,32 +5,25 @@
  */
 package com.t3h.ecommerce.servlet;
 
-import com.t3h.ecommerce.entity.Category;
-import com.t3h.ecommerce.entity.Product;
-import com.t3h.ecommerce.service.DatabaseConnection;
-import com.t3h.ecommerce.service.ProductService;
+import com.t3h.ecommerce.entity.Cart;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author BINH
  */
-public class ProductServlet extends HttpServlet {
-
+public class AddToCartServlet extends HttpServlet {
+    
+    Cart cart;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -44,12 +37,17 @@ public class ProductServlet extends HttpServlet {
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-        int onPageProducts = 10;
-        List<Product> listProducts = new ArrayList<>();
-        listProducts = ProductService.GetProducts("select * from ecom_product order by maker_date limit "+ onPageProducts);
-        request.setAttribute("listProducts", listProducts);
-        request.getRequestDispatcher("index.jsp").forward(request, response);
+        
+        HttpSession session = request.getSession();
+        if(session.getAttribute("cart") == null){
+            cart = new Cart();
+            session.setAttribute("cart", cart);           
+        }
+        cart = (Cart)session.getAttribute("cart");
+        int productId = Integer.parseInt(request.getParameter("productId"));
+        int cartQuantity = Integer.parseInt(request.getParameter("quantity"));
+        cart.setListProduct(productId, cartQuantity);
+        response.sendRedirect("");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -67,9 +65,9 @@ public class ProductServlet extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddToCartServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddToCartServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -87,9 +85,9 @@ public class ProductServlet extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddToCartServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(ProductServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AddToCartServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

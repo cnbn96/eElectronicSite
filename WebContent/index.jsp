@@ -59,16 +59,14 @@
                             <ul>
                                 <li><a href="#"><i class="fa fa-user"></i> My Account</a></li>
                                 <li><a href="#"><i class="fa fa-heart"></i> Wishlist</a></li>
-                                <li><a href="cart.html"><i class="fa fa-user"></i> My Cart</a></li>
+                                <li><a href="CartServlet"><i class="fa fa-user"></i> My Cart</a></li>
                                 <li><a href="checkout.html"><i class="fa fa-user"></i> Checkout</a></li>
-                                <!--<li><a href="#"><i class="fa fa-user"></i><%=fullName%> </a></li>
-                                <li><a href="LogoutServlet"><i class="fa fa-user"></i> Logout</a></li> -->
                                 <%if (account != null) {%>
-                                <li><a href="#"><i class="fa fa-user"></i><%=fullName%> </a></li>
-                                <li><a href="LogoutServlet"><i class="fa fa-user"></i> Logout</a></li>
-                                    <% } else { %>
-                                <li><a href="login.jsp"><i class="fa fa-user"></i> Login</a></li>
-                                    <% }%>
+                                    <li><a href="#"><i class="fa fa-user"></i><%=fullName%> </a></li>
+                                    <li><a href="LogoutServlet"><i class="fa fa-user"></i> Logout</a></li>
+                                <% } else { %>
+                                    <li><a href="login.jsp"><i class="fa fa-user"></i> Login</a></li>
+                                <% }%>
                             </ul>
                         </div>
                     </div>
@@ -105,13 +103,13 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="logo">
-                            <h1><a href="index.html">e<span>Electronics</span></a></h1>
+                            <h1><a href="">e<span>Electronics</span></a></h1>
                         </div>
                     </div>
 
                     <div class="col-sm-6">
                         <div class="shopping-item">
-                            <a href="cart.html">Cart - <span class="cart-amunt">$800</span> <i class="fa fa-shopping-cart"></i> <span class="product-count">5</span></a>
+                            <a href="CartServlet">Cart - <span class="cart-amunt">$800</span> <i class="fa fa-shopping-cart"></i> <span class="product-count">5</span></a>
                         </div>
                     </div>
                 </div>
@@ -131,11 +129,11 @@
                     </div> 
                     <div class="navbar-collapse collapse">
                         <ul class="nav navbar-nav">
-                            <li class="active"><a href="index.html">Home</a></li>
+                            <li class="active"><a href="/WEB-INF/">Home</a></li>
                             <li><a href="shop.html">Shop page</a></li>
-                            <li><a href="single-product.html">Single product</a></li>
-                            <li><a href="cart.html">Cart</a></li>
-                            <li><a href="checkout.html">Checkout</a></li>
+                            <li><a href="SingleProductServlet">Single product</a></li>
+                            <li><a href="CartServlet">Cart</a></li>
+                            <li><a href="checkout.jsp">Checkout</a></li>
                             <li><a href="#">Category</a></li>
                             <li><a href="#">Others</a></li>
                             <li><a href="#">Contact</a></li>
@@ -270,33 +268,18 @@
                     <div class="col-md-12">
                         <div class="latest-product">
                             <h2 class="section-title">Latest Products</h2>
-                            <div class="product-carousel">
-                                <div class="single-product">
-                                    <div class="product-f-image">
-                                        <img src="img/product-1.jpg" alt="">
-                                        <div class="product-hover">
-                                            <a href="cart.html" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
-                                            <a href="single-product.html" class="view-details-link"><i class="fa fa-link"></i> See details</a>
-                                        </div>
-                                    </div>
-
-                                    <h2><a href="single-product.html">Sony Smart TV - 2015</a></h2>
-
-                                    <div class="product-carousel-price">
-                                        <ins>$700.00</ins> <del>$800.00</del>
-                                    </div> 
-                                </div>
+                            <div class="product-carousel">                                
                                 <c:forEach items="${listProducts}" var="pr">
                                     <div class="single-product">
                                         <div class="product-f-image">
                                             <img src="${pr.productImage}" alt="${pr.productName}">
                                             <div class="product-hover">
-                                                <a href="CartServlet?productId=${pr.productId}" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
-                                                <a href="SingleProductServlet?productId=${pr.productId}?amp;${pr.productCategory.categoryName}" class="view-details-link"><i class="fa fa-link"></i> See details</a>
+                                                <a href="AddToCartServlet?productId=${pr.productId}&quantity=1" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                                <a href="SingleProductServlet?productId=${pr.productId}" class="view-details-link"><i class="fa fa-link"></i> See details</a>
                                             </div>
                                         </div>
 
-                                            <h2><a href="single-product.html">${pr.productName}</a></h2>
+                                            <h2><a href="SingleProductServlet?productId=${pr.productId}">${pr.productName}</a></h2>
 
                                         <div class="product-carousel-price">
                                             <ins>$${pr.productPrice}</ins> <del>$${pr.productPricePromotion}</del>
